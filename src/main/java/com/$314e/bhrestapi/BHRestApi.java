@@ -5,6 +5,7 @@ import javax.ws.rs.Encoded;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
@@ -99,26 +100,59 @@ public interface BHRestApi {
 	 * @author Kesav Kumar Kolla (kesav@314ecorp.com)
 	 *
 	 */
-	public interface Candidate {
+	public interface Entity {
+		public enum ENTITY_TYPE {
+			CANDIDATE("Candidate"), CLIENT_CONTACT("ClientContact"), NOTE_ENTITY("NoteEntity"), NOTE("Note");
+
+			private final String value;
+
+			private ENTITY_TYPE(String value) {
+				this.value = value;
+			}
+
+			public String value() {
+				return value;
+			}
+
+			@Override
+			public String toString() {
+				return value;
+			}
+		}
+
 		/**
-		 * Searches for candidates
+		 * Searches for entities
 		 * 
+		 * @param entityType
 		 * @param token
-		 *            REST API token
 		 * @param query
-		 *            candidate query
+		 *            Lucene query string
 		 * @param fields
-		 *            fields to return in query
+		 *            Comma-separated list of field names
+		 * @param sort
+		 *            Field to sort result on. Default sort order is ascending.
+		 *            Precede with minus sign to perform descending sort.
 		 * @param count
-		 *            no.of items to retrieve
+		 *            Limit on the number of entities to return. If the set of
+		 *            matched results is larger than the count value, the
+		 *            returned results is capped at the count value. The default
+		 *            count is 20. The maximum count is 500; if you specify a
+		 *            count greater than 500, a message at the end of the
+		 *            response indicates you have specified too many items. The
+		 *            response also includes the actual number of items returned
+		 *            and the start value of the request. This is useful when
+		 *            you want to make calls to page additional sets of data.
+		 * 
 		 * @param start
-		 *            start of the results
+		 *            From the set of matched results, returns item numbers
+		 *            start through (start + count)
 		 * @return
 		 */
 		@GET
-		@Path("search/Candidate")
-		public ObjectNode search(final @QueryParam("BhRestToken") String token,
-				final @QueryParam("query") String query, final @QueryParam("fields") String fields,
+		@Path("search/{entityType}")
+		public ObjectNode search(final @PathParam("entityType") ENTITY_TYPE entityType,
+				final @QueryParam("BhRestToken") String token, final @QueryParam("query") String query,
+				final @QueryParam("fields") String fields, final @QueryParam("sort") String sort,
 				final @QueryParam("count") int count, final @QueryParam("start") long start);
 	}
 }

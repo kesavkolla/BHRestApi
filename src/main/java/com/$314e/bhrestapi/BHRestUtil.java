@@ -37,9 +37,8 @@ public class BHRestUtil {
 	 * @param token
 	 * @return
 	 */
-	public static BHRestApi.Candidate getCandidateApi(final ObjectNode token) {
-		return new ResteasyClientBuilder().build().target(token.get("restUrl").asText())
-				.proxy(BHRestApi.Candidate.class);
+	public static BHRestApi.Entity getEntityApi(final ObjectNode token) {
+		return new ResteasyClientBuilder().build().target(token.get("restUrl").asText()).proxy(BHRestApi.Entity.class);
 	}
 
 	/**

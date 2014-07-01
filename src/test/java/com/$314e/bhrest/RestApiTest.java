@@ -1,8 +1,10 @@
 package com.$314e.bhrest;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
+import com.$314e.bhrestapi.BHRestApi;
 import com.$314e.bhrestapi.BHRestUtil;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -15,12 +17,32 @@ public class RestApiTest {
 	private static final String BH_USER = "abhi";
 	private static final String BH_PASSWORD = "Kaiser123";
 
+	private ObjectNode token;
+	private String restToken;
+
+	@Before
+	public void setupToken() throws Exception {
+		token = BHRestUtil.getRestToken(CLIENT_ID, CLIENT_SECRET, BH_USER, BH_PASSWORD);
+		this.restToken = token.get("BhRestToken").asText();
+	}
+
 	@Test
 	public void testLogin() throws Exception {
-		final ObjectNode token = BHRestUtil.getRestToken(CLIENT_ID, CLIENT_SECRET, BH_USER, BH_PASSWORD);
-		System.out.println(token);
-		Assert.assertNotNull("Token can not be null", token);
-		Assert.assertNotNull("Rest Token can not be null", token.get("BhRestToken"));
-		Assert.assertNotNull("", token.get("restUrl"));
+		Assert.assertNotNull("Token can not be null", this.token);
+		Assert.assertNotNull("Rest Token can not be null", this.token.get("BhRestToken"));
+		Assert.assertNotNull("restUrl can not be null", this.token.get("restUrl"));
+	}
+
+	@Test
+	public void candidateSearch() throws Exception {
+		final BHRestApi.Entity entityApi = BHRestUtil.getEntityApi(this.token);
+
+		System.out
+				.println(entityApi
+						.search(BHRestApi.Entity.ENTITY_TYPE.CANDIDATE,
+								restToken,
+								"isDeleted:0 AND NOT status:Archive",
+								"id,name,occupation,phone,address,customText19,companyName,status,dateAdded,owner(id,firstName,lastName),dateAvailableEnd,email,customDate3,customText4,source",
+								"-dateAdded", 10, 0));
 	}
 }
