@@ -1,7 +1,9 @@
 package com.$314e.bhrest;
 
+import java.util.Properties;
+
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.$314e.bhrestapi.BHRestApi;
@@ -14,25 +16,28 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class RestApiTest {
 	private static final String CLIENT_ID = "71eb9c1a-27e1-4bb6-8c60-8f835cc51651";
 	private static final String CLIENT_SECRET = "lU5yFm9ypiLPctFGzidBaXYV7c53Drie";
-	private static final String BH_USER = "abhi";
-	private static final String BH_PASSWORD = "Kaiser123";
 
-	private ObjectNode token;
-	private String restToken;
-	private BHRestApi.Entity entityApi;
+	private static Properties properties = new Properties();
+	private static ObjectNode token;
+	private static String restToken;
+	private static BHRestApi.Entity entityApi;
 
-	@Before
-	public void setupToken() throws Exception {
-		token = BHRestUtil.getRestToken(CLIENT_ID, CLIENT_SECRET, BH_USER, BH_PASSWORD);
-		this.restToken = token.get("BhRestToken").asText();
-		this.entityApi = BHRestUtil.getEntityApi(this.token);
+	@BeforeClass
+	public static void setupToken() throws Exception {
+		properties.load(RestApiTest.class.getResourceAsStream("/local.properties"));
+		token = BHRestUtil.getRestToken(properties.getProperty("CLIENT_ID", CLIENT_ID),
+				properties.getProperty("CLIENT_SECRET", CLIENT_SECRET), properties.getProperty("BH_USER"),
+				properties.getProperty("BH_PASSWORD"));
+		restToken = token.get("BhRestToken").asText();
+		entityApi = BHRestUtil.getEntityApi(token);
+
 	}
 
 	@Test
 	public void testLogin() throws Exception {
-		Assert.assertNotNull("Token can not be null", this.token);
-		Assert.assertNotNull("Rest Token can not be null", this.token.get("BhRestToken"));
-		Assert.assertNotNull("restUrl can not be null", this.token.get("restUrl"));
+		Assert.assertNotNull("Token can not be null", token);
+		Assert.assertNotNull("Rest Token can not be null", token.get("BhRestToken"));
+		Assert.assertNotNull("restUrl can not be null", token.get("restUrl"));
 	}
 
 	@Test
@@ -48,8 +53,9 @@ public class RestApiTest {
 
 	@Test
 	public void getCandidate() throws Exception {
-		final ObjectNode candidate = entityApi
-				.get(BHRestApi.Entity.ENTITY_TYPE.CANDIDATE, this.restToken, "70858", "*");
-		System.out.println(candidate.toString());
+		final ObjectNode candidate = entityApi.get(BHRestApi.Entity.ENTITY_TYPE.CANDIDATE, restToken, "70858", "*");
+		Assert.assertNotNull("Candidate can't be empty", candidate);
+		Assert.assertNotNull("Candidate can't be null", candidate.get("data"));
+		System.out.println(candidate.path("data").path("address"));
 	}
 }
