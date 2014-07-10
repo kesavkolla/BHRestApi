@@ -170,5 +170,10 @@ public interface BHRestApi {
 		public ObjectNode update(final @PathParam("entityType") ENTITY_TYPE entityType,
 				final @QueryParam("BhRestToken") String token, final @PathParam("entityId") Object entityId,
 				final ObjectNode entity);
+
+		@POST
+		@Path("massUpdate/{entityType}")
+		public ObjectNode massUpdate(final @PathParam("entityType") ENTITY_TYPE entityType,
+				final @QueryParam("BhRestToken") String token, final ObjectNode data);
 	}
 }
