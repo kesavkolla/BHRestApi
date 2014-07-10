@@ -159,18 +159,56 @@ public interface BHRestApi {
 				final @QueryParam("fields") String fields, final @QueryParam("sort") String sort,
 				final @QueryParam("count") int count, final @QueryParam("start") long start);
 
+		/**
+		 * Retrieves a given entity
+		 * 
+		 * @param entityType
+		 *            Entity Type
+		 * @param token
+		 *            REST token
+		 * @param entityId
+		 *            entity id to be retrieved. Multiple Ids can be provided
+		 *            with a "," separated values
+		 * @param fields
+		 *            Fields to retrieve. Use * to retrieve all the fields
+		 * @return
+		 */
 		@GET
 		@Path("entity/{entityType}/{entityId}")
 		public ObjectNode get(final @PathParam("entityType") ENTITY_TYPE entityType,
 				final @QueryParam("BhRestToken") String token, final @PathParam("entityId") Object entityId,
 				final @QueryParam("fields") String... fields);
 
+		/**
+		 * Update given entity
+		 * 
+		 * @param entityType
+		 *            Entity tpye
+		 * @param token
+		 *            REST token
+		 * @param entityId
+		 *            entity id to for update
+		 * @param entity
+		 *            data to be updated for the entity
+		 * @return
+		 */
 		@POST
 		@Path("entity/{entityType}/{entityId}")
 		public ObjectNode update(final @PathParam("entityType") ENTITY_TYPE entityType,
 				final @QueryParam("BhRestToken") String token, final @PathParam("entityId") Object entityId,
 				final ObjectNode entity);
 
+		/**
+		 * Perform massupdate of entities
+		 * 
+		 * @param entityType
+		 *            entity type
+		 * @param token
+		 *            REST token
+		 * @param data
+		 *            massupdate data
+		 * @return
+		 */
 		@POST
 		@Path("massUpdate/{entityType}")
 		public ObjectNode massUpdate(final @PathParam("entityType") ENTITY_TYPE entityType,
