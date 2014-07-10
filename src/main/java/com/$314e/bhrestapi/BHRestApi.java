@@ -1,5 +1,6 @@
 package com.$314e.bhrestapi;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.Encoded;
 import javax.ws.rs.GET;
@@ -100,9 +101,12 @@ public interface BHRestApi {
 	 * @author Kesav Kumar Kolla (kesav@314ecorp.com)
 	 *
 	 */
+	@Consumes({ "application/json" })
+	@Produces({ "application/json" })
 	public interface Entity {
 		public enum ENTITY_TYPE {
-			CANDIDATE("Candidate"), CLIENT_CONTACT("ClientContact"), NOTE_ENTITY("NoteEntity"), NOTE("Note");
+			CANDIDATE("Candidate"), CLIENT_CONTACT("ClientContact"), NOTE_ENTITY("NoteEntity"), NOTE("Note"), APPOINTMENT(
+					"Appointment"), PLACEMENT("Placement"), JOB_ORDER("JobOrder"), JOB_SUBMISSION("JobSubmission");
 
 			private final String value;
 
@@ -154,5 +158,17 @@ public interface BHRestApi {
 				final @QueryParam("BhRestToken") String token, final @QueryParam("query") String query,
 				final @QueryParam("fields") String fields, final @QueryParam("sort") String sort,
 				final @QueryParam("count") int count, final @QueryParam("start") long start);
+
+		@GET
+		@Path("entity/{entityType}/{entityId}")
+		public ObjectNode get(final @PathParam("entityType") ENTITY_TYPE entityType,
+				final @QueryParam("BhRestToken") String token, final @PathParam("entityId") Object entityId,
+				final @QueryParam("fields") String... fields);
+
+		@POST
+		@Path("entity/{entityType}/{entityId}")
+		public ObjectNode update(final @PathParam("entityType") ENTITY_TYPE entityType,
+				final @QueryParam("BhRestToken") String token, final @PathParam("entityId") Object entityId,
+				final ObjectNode entity);
 	}
 }

@@ -19,11 +19,13 @@ public class RestApiTest {
 
 	private ObjectNode token;
 	private String restToken;
+	private BHRestApi.Entity entityApi;
 
 	@Before
 	public void setupToken() throws Exception {
 		token = BHRestUtil.getRestToken(CLIENT_ID, CLIENT_SECRET, BH_USER, BH_PASSWORD);
 		this.restToken = token.get("BhRestToken").asText();
+		this.entityApi = BHRestUtil.getEntityApi(this.token);
 	}
 
 	@Test
@@ -35,8 +37,6 @@ public class RestApiTest {
 
 	@Test
 	public void candidateSearch() throws Exception {
-		final BHRestApi.Entity entityApi = BHRestUtil.getEntityApi(this.token);
-
 		System.out
 				.println(entityApi
 						.search(BHRestApi.Entity.ENTITY_TYPE.CANDIDATE,
@@ -44,5 +44,12 @@ public class RestApiTest {
 								"isDeleted:0 AND NOT status:Archive",
 								"id,name,occupation,phone,address,customText19,companyName,status,dateAdded,owner(id,firstName,lastName),dateAvailableEnd,email,customDate3,customText4,source",
 								"-dateAdded", 10, 0));
+	}
+
+	@Test
+	public void getCandidate() throws Exception {
+		final ObjectNode candidate = entityApi
+				.get(BHRestApi.Entity.ENTITY_TYPE.CANDIDATE, this.restToken, "70858", "*");
+		System.out.println(candidate.toString());
 	}
 }
