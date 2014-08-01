@@ -59,7 +59,6 @@ public class RestApiTest {
 		System.out.println(candidate.path("data").path("address"));
 	}
 
-	@Test
 	public void massupdate() throws Exception {
 		final ObjectNode data = new ObjectNode(JsonNodeFactory.instance);
 		final ArrayNode ids = data.putArray("ids");
