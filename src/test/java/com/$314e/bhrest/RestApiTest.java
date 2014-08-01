@@ -8,6 +8,8 @@ import org.junit.Test;
 
 import com.$314e.bhrestapi.BHRestApi;
 import com.$314e.bhrestapi.BHRestUtil;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
@@ -40,7 +42,6 @@ public class RestApiTest {
 		Assert.assertNotNull("restUrl can not be null", token.get("restUrl"));
 	}
 
-	@Test
 	public void candidateSearch() throws Exception {
 		System.out
 				.println(entityApi
@@ -51,11 +52,21 @@ public class RestApiTest {
 								"-dateAdded", 10, 0));
 	}
 
-	@Test
 	public void getCandidate() throws Exception {
 		final ObjectNode candidate = entityApi.get(BHRestApi.Entity.ENTITY_TYPE.CANDIDATE, restToken, "70858", "*");
 		Assert.assertNotNull("Candidate can't be empty", candidate);
 		Assert.assertNotNull("Candidate can't be null", candidate.get("data"));
 		System.out.println(candidate.path("data").path("address"));
+	}
+
+	@Test
+	public void massupdate() throws Exception {
+		final ObjectNode data = new ObjectNode(JsonNodeFactory.instance);
+		final ArrayNode ids = data.putArray("ids");
+		ids.add(100);
+		ids.add(200);
+		data.put("statu", "active");
+		System.out.println(data);
+		entityApi.massUpdate(BHRestApi.Entity.ENTITY_TYPE.CANDIDATE, restToken, data);
 	}
 }
