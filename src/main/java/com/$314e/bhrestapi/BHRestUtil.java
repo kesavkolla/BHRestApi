@@ -1,9 +1,8 @@
 package com.$314e.bhrestapi;
 
-import java.net.URLDecoder;
-
 import javax.ws.rs.core.Response;
 
+import org.apache.http.client.utils.URIBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -63,8 +62,12 @@ public class BHRestUtil {
 		if (!location.contains("code=")) {
 			throw new RuntimeException("Error in login: " + location);
 		}
+		final URIBuilder builder = new URIBuilder(location);
+		final String authCode = builder.getQueryParams().stream().filter(p -> p.getName().equals("code")).findFirst()
+				.get().getValue();
 
-		final String authCode = URLDecoder.decode(location.split("=")[1], "UTF-8");
+		// final String authCode = URLDecoder.decode(location.split("=")[1],
+		// "UTF-8");
 		final ObjectNode bhAuthToken = bhAuth.token("authorization_code", authCode, clientId, clientSecret);
 		final BHRestApi.Token tokenApi = getTokenApi();
 		return tokenApi.login("*", bhAuthToken.get("access_token").asText());
