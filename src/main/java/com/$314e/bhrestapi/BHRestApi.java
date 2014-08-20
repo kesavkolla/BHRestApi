@@ -125,7 +125,7 @@ public interface BHRestApi {
 		}
 
 		/**
-		 * Searches for entities
+		 * Searches for entities in Lucene style
 		 * 
 		 * @param entityType
 		 * @param token
@@ -157,6 +157,44 @@ public interface BHRestApi {
 		public ObjectNode search(final @PathParam("entityType") ENTITY_TYPE entityType,
 				final @QueryParam("BhRestToken") String token, final @QueryParam("query") String query,
 				final @QueryParam("fields") String fields, final @QueryParam("sort") String sort,
+				final @QueryParam("count") int count, final @QueryParam("start") long start);
+
+		/**
+		 * queries for entities in SQL style
+		 * 
+		 * @param entityType
+		 * @param token
+		 * @param query
+		 *            SQL query string
+		 * @param fields
+		 *            Comma-separated list of field names
+		 * @param orderBy
+		 *            Comma-separated list of field names on which to base the
+		 *            order of returned entities. Precede field name with a
+		 *            minus sign (-) or plus sign (+) to sort results in
+		 *            descending or ascending order based on that field; default
+		 *            is ascending order.
+		 * @param count
+		 *            Limit on the number of entities to return. If the set of
+		 *            matched results is larger than the count value, the
+		 *            returned results is capped at the count value. The default
+		 *            count is 20. The maximum count is 500; if you specify a
+		 *            count greater than 500, a message at the end of the
+		 *            response indicates you have specified too many items. The
+		 *            response also includes the actual number of items returned
+		 *            and the start value of the request. This is useful when
+		 *            you want to make calls to page additional sets of data.
+		 * 
+		 * @param start
+		 *            From the set of matched results, returns item numbers
+		 *            start through (start + count)
+		 * @return
+		 */
+		@GET
+		@Path("query/{entityType}")
+		public ObjectNode query(final @PathParam("entityType") ENTITY_TYPE entityType,
+				final @QueryParam("BhRestToken") String token, final @QueryParam("where") String where,
+				final @QueryParam("fields") String fields, final @QueryParam("orderBy") String orderBy,
 				final @QueryParam("count") int count, final @QueryParam("start") long start);
 
 		/**
