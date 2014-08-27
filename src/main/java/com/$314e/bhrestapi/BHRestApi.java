@@ -105,8 +105,17 @@ public interface BHRestApi {
 	@Produces({ "application/json" })
 	public interface Entity {
 		public enum ENTITY_TYPE {
-			CANDIDATE("Candidate"), CLIENT_CONTACT("ClientContact"), NOTE_ENTITY("NoteEntity"), NOTE("Note"), APPOINTMENT(
-					"Appointment"), PLACEMENT("Placement"), JOB_ORDER("JobOrder"), JOB_SUBMISSION("JobSubmission");
+			// @formatter:off
+			CANDIDATE("Candidate"), 
+			CLIENT_CONTACT("ClientContact"), 
+			NOTE_ENTITY("NoteEntity"), 
+			NOTE("Note"), 
+			APPOINTMENT("Appointment"), 
+			PLACEMENT("Placement"), 
+			JOB_ORDER("JobOrder"), 
+			JOB_SUBMISSION("JobSubmission"), 
+			PERSON("Person");
+			// @formatter:off
 
 			private final String value;
 
