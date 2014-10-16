@@ -114,7 +114,8 @@ public interface BHRestApi {
 			PLACEMENT("Placement"), 
 			JOB_ORDER("JobOrder"), 
 			JOB_SUBMISSION("JobSubmission"), 
-			PERSON("Person");
+			PERSON("Person"),
+			TEARSHEAT("Tearsheet");
 			// @formatter:off
 
 			private final String value;
