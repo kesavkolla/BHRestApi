@@ -5,6 +5,7 @@ import javax.ws.rs.DefaultValue;
 import javax.ws.rs.Encoded;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -245,6 +246,19 @@ public interface BHRestApi {
 		public ObjectNode update(final @PathParam("entityType") ENTITY_TYPE entityType,
 				final @QueryParam("BhRestToken") String token, final @PathParam("entityId") Object entityId,
 				final ObjectNode entity);
+		
+		/**
+		 * Add a new entity
+		 * 
+		 * @param entityType Entity tpye
+		 * @param token REST token
+		 * * @param entity entity data
+		 * @return
+		 */
+		@PUT
+		@Path("entity/{entityType}")
+		public ObjectNode put(final @PathParam("entityType") ENTITY_TYPE entityType,
+				final @QueryParam("BhRestToken") String token, final ObjectNode entity);
 
 		/**
 		 * Perform massupdate of entities
