@@ -1,6 +1,7 @@
 package com.$314e.bhrestapi;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.Encoded;
 import javax.ws.rs.GET;
@@ -259,6 +260,11 @@ public interface BHRestApi {
 		@Path("entity/{entityType}")
 		public ObjectNode put(final @PathParam("entityType") ENTITY_TYPE entityType,
 				final @QueryParam("BhRestToken") String token, final ObjectNode entity);
+		
+		@DELETE
+		@Path("entity/{entityType}/{entityId}")
+		public ObjectNode delete(final @PathParam("entityType") ENTITY_TYPE entityType,
+				final @QueryParam("BhRestToken") String token, final @PathParam("entityId") String id);
 
 		/**
 		 * Perform massupdate of entities
